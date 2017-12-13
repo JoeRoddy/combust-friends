@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "users": "latest",
+    "chat": "latest"
+  },
+  "installation": {
+    "components/combust_examples/users/SocialContacts.jsx": {
+      "imports": ["import FriendsList from \"../friends/FriendsList\";"],
+      "after": {
+        "pattern": "const componentsByMode = {",
+        "code": ["\nFriends: <FriendsList  />,"]
+      }
+    },
+    "components/combust_examples/users/Profile.jsx": {
+      "imports": ["import friendsStore from \"../../../stores/FriendsStore\";"],
+      "replace": {
+        "pattern": "alert(\"combust install friends\");\n",
+        "code": ["friendsStore.addFriend(userId);"]
+      }
+    }
+  }
+}
