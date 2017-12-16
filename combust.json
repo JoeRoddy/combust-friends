@@ -19,7 +19,7 @@
       }
     }
   },
-  "update_data": {
+  "updateData": {
     "users": {
       "publicInfo": {
         "mockUser1": {
