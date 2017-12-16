@@ -18,5 +18,47 @@
         "code": ["friendsStore.addFriend(userId);"]
       }
     }
+  },
+  "update_data": {
+    "users": {
+      "publicInfo": {
+        "mockUser1": {
+          "email": "doggo@gmail.com",
+          "iconUrl":
+            "https://images.pexels.com/photos/7720/night-animal-dog-pet.jpg?w=940&h=650&dpr=2&auto=compress&cs=tinysrgb",
+          "isOnline": false
+        },
+        "mockUser2": {
+          "email": "kitten@mittens.gov",
+          "iconUrl":
+            "https://images.pexels.com/photos/315582/pexels-photo-315582.jpeg?w=940&h=650&dpr=2&auto=compress&cs=tinysrgb",
+          "isOnline": false
+        },
+        "mockUser3": {
+          "email": "bearly-legal@gmail.com",
+          "iconUrl":
+            "https://images.pexels.com/photos/35435/pexels-photo.jpg?w=940&h=650&dpr=2&auto=compress&cs=tinysrgb",
+          "isOnline": false
+        }
+      },
+      "serverInfo": {
+        "mockUser1": {
+          "isAdmin": false
+        },
+        "mockUser2": {
+          "isAdmin": false
+        },
+        "mockUser3": {
+          "isAdmin": false
+        }
+      }
+    },
+    "friendsByUser": {
+      "$admins": {
+        "mockUser1": true,
+        "mockUser2": true,
+        "mockUser3": true
+      }
+    }
   }
 }
