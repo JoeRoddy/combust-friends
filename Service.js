@@ -33,21 +33,15 @@ class FriendsService {
       });
   }
 
-  // loadAndListenToFriends(friends, callback) {
-  //   friends &&
-  //     Object.keys(friends).forEach(friendId => {
-  //       this.listenToFriend(friendId, callback);
-  //     });
-  // }
-
   listenToFriend(friendId, callback) {
     firebase
       .database()
-      .ref("users/" + friendId + "/public")
+      .ref("users/publicInfo/" + friendId)
       .on("value", snapshot => {
         let friend = snapshot.val();
         if (!friend) {
-          callback(null, null);
+          debugger;
+          return callback("no friend data w/ uid:" + friendId);
         }
         friend.id = friendId;
         callback(null, friend);
