@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "users": "latest",
-    "chat": "latest"
+    "chat": "latest",
+    "notifications": "latest"
   },
   "installation": {
     "components/combust_examples/users/SocialContacts.jsx": {

@@ -3,24 +3,53 @@ import friendsService from "../service/FriendsService";
 
 //DEPENDENCIES
 import usersStore from "./UsersStore";
+import notificationStore from "./NotificationStore";
 
 class FriendsStore {
   subscribeToEvents() {
     //must be inline functions, or use .bind(this)
     usersStore.onLogin(this.getFriendsForUser.bind(this));
     usersStore.onLogout(this.onUserLogout.bind(this));
+
+    notificationStore.onNotificationAction(
+      "friend_request",
+      this.handleFriendRequestDecision.bind(this)
+    );
   }
 
+  @observable friendshipsMapByFriendId = new Map();
   @observable friendIdsMap = new Map();
+  @observable activeFriendshipsByFriendIdMap = new Map();
 
   usersLoaded = false;
   getFriendsForUser(user) {
     if (this.usersLoaded) {
       return;
     }
-    friendsService.listenToFriends(user.id, (err, friend) => {
-      err ? console.log(err) : this.storeFriend(friend.id, friend);
+
+    const userId = user.id;
+    friendsService.listenToFriendships(userId, (err, friendshipId) => {
+      friendsService.listenToFriendship(
+        friendshipId,
+        userId,
+        (err, friendship) => {
+          const usersInFriendship = friendship.users
+            ? Object.keys(friendship.users)
+            : [];
+          const friendId = usersInFriendship.find(uid => uid !== userId);
+          this.friendshipsMapByFriendId.set(friendId, friendship);
+          debugger;
+          if (friendship.status === "active") {
+            this.activeFriendshipsByFriendIdMap.set(friendId, true);
+            usersStore.listenToPublicUserData(friendId);
+          }
+        }
+      );
     });
+
+    // friendsService.listenToFriends(user.id, (err, friend) => {
+    //   err ? console.log(err) : this.storeFriend(friend.id, friend);
+    // });
     this.usersLoaded = true;
   }
 
@@ -30,21 +59,42 @@ class FriendsStore {
   }
 
   isFriend(userId) {
-    return this.getFriend(userId) ? true : false;
+    return this.activeFriendshipsByFriendIdMap.has(userId);
   }
 
   getFriend(userId) {
-    return usersStore.getUserById(userId);
+    return this.isFriend(userId) ? usersStore.getUserById(userId) : null;
   }
 
-  addFriend(userIdOfFriend) {
-    friendsService.addFriend(userIdOfFriend, usersStore.userId);
+  /**
+   * returns 'friend', 'pending', or 'non_friend'
+   * @param {*} friendId
+   */
+  friendshipStatus(friendId) {
+    if (this.isFriend(friendId)) {
+      return "friend";
+    } else if (this.friendshipsMapByFriendId.has(friendId)) {
+      return "pending";
+    } else {
+      return "non_friend";
+    }
+  }
+
+  addFriend(friendId) {
+    if (this.isFriend(friendId)) {
+      return console.error("users are already friends");
+    } else if (this.friendshipsMapByFriendId.has(friendId)) {
+      return console.error("friend request already pending");
+    }
+    const clientUser = usersStore.user;
+    const body = `${clientUser.email} would like to be your friend`;
+    friendsService.sendFriendRequest(friendId, usersStore.userId, body);
   }
 
   @computed
   get friends() {
     let friends = {};
-    Array.from(this.friendIdsMap.keys()).forEach(uid => {
+    Array.from(this.activeFriendshipsByFriendIdMap.keys()).forEach(uid => {
       friends[uid] = usersStore.getUserById(uid);
     });
     return friends;
@@ -66,6 +116,11 @@ class FriendsStore {
 
     //if chat enabled -> open chat
     //else if profiles -> open profile
+  };
+
+  handleFriendRequestDecision = (notification, action) => {
+    let isAccepted = action === "accept";
+    friendsService.answerFriendRequest(isAccepted, notification.friendshipId);
   };
 
   onUserLogout(user) {

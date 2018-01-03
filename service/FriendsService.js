@@ -1,35 +1,102 @@
 import firebase from "firebase";
+import notificationService from "./NotificationService";
 
 class FriendsService {
-  addFriend(friendId, uid) {
-    this.setFriendship(friendId, uid, true);
+  sendFriendRequest(friendId, uid, requestBody) {
+    const friendshipId = this.createFriendship(uid, friendId);
+    notificationService.createNotification(
+      {
+        userId: friendId,
+        createdBy: uid,
+        type: "friend_request",
+        friendshipId: friendshipId,
+        body: requestBody,
+        actions: {
+          accept: true,
+          decline: true
+        }
+      },
+      friendId
+    );
   }
 
   removeFriend(friendId, uid) {
     this.setFriendship(friendId, uid, false);
   }
 
-  setFriendship(friendId, uid, isFriend) {
+  answerFriendRequest(isAccepted, friendshipId) {
+    if (!friendshipId) {
+      return;
+    }
+
     firebase
       .database()
-      .ref("friendsByUser/" + uid)
-      .child(friendId)
-      .set(isFriend ? true : null);
+      .ref("friends/friendships")
+      .child(friendshipId)
+      .update({
+        status: isAccepted ? "active" : "declined",
+        acceptedOn: isAccepted ? new Date().getTime() : null
+      });
+  }
+
+  createFriendship(uid, friendId) {
+    if (!uid || !friendId) {
+      throw "createFrienship() missing arg, userId:" +
+        uid +
+        " -- friendId: " +
+        friendId;
+    }
+    let db = firebase.database();
+    const friendship = {
+      createdAt: new Date().getTime(),
+      users: {
+        [uid]: true,
+        [friendId]: true
+      },
+      status: "pending"
+    };
+
+    const fRef = db.ref("friends/friendships").push();
+    const friendshipId = fRef.key;
+    fRef.set(friendship);
+    [uid, friendId].forEach(u => {
+      db.ref("friends/friendshipIdsByUser/" + u + "/" + friendshipId).set(true);
+    });
+
+    return friendshipId;
   }
 
   listenToFriends(userId, callback) {
-    this.listenToFriendIds(userId, (err, friendId) => {
-      this.listenToFriend(friendId, callback);
+    this.listenToFriendships(userId, (err, friendshipId) => {
+      this.listenToFriendship(friendshipId, userId, callback);
     });
   }
 
-  listenToFriendIds(userId, callback) {
+  listenToFriendships(userId, callback) {
     firebase
       .database()
-      .ref("friendsByUser")
+      .ref("friends/friendshipIdsByUser")
       .child(userId)
       .on("child_added", snap => {
         callback(null, snap.key);
+      });
+  }
+
+  listenToFriendship(friendshipId, userId, callback) {
+    firebase
+      .database()
+      .ref("friends/friendships")
+      .child(friendshipId)
+      .on("value", snap => {
+        let friendship = snap.val();
+        if (friendship) {
+          const usersInFriendship =
+            friendship.users && Object.keys(friendship.users);
+          const friendId = usersInFriendship.find(uid => uid !== userId);
+          friendship.id = friendshipId;
+          return callback(null, friendship);
+          // this.listenToFriend(friendId, callback);
+        }
       });
   }
 
@@ -40,7 +107,6 @@ class FriendsService {
       .on("value", snapshot => {
         let friend = snapshot.val();
         if (!friend) {
-          debugger;
           return callback("no friend data w/ uid:" + friendId);
         }
         friend.id = friendId;
