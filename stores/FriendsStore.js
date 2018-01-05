@@ -38,7 +38,6 @@ class FriendsStore {
             : [];
           const friendId = usersInFriendship.find(uid => uid !== userId);
           this.friendshipsMapByFriendId.set(friendId, friendship);
-          debugger;
           if (friendship.status === "active") {
             this.activeFriendshipsByFriendIdMap.set(friendId, true);
             usersStore.listenToPublicUserData(friendId);
@@ -47,9 +46,6 @@ class FriendsStore {
       );
     });
 
-    // friendsService.listenToFriends(user.id, (err, friend) => {
-    //   err ? console.log(err) : this.storeFriend(friend.id, friend);
-    // });
     this.usersLoaded = true;
   }
 
@@ -95,7 +91,10 @@ class FriendsStore {
   get friends() {
     let friends = {};
     Array.from(this.activeFriendshipsByFriendIdMap.keys()).forEach(uid => {
-      friends[uid] = usersStore.getUserById(uid);
+      const friend = usersStore.getUserById(uid);
+      if (friend) {
+        friends[uid] = friend;
+      }
     });
     return friends;
   }
@@ -113,9 +112,6 @@ class FriendsStore {
       : alert(
           "Friend clicked, add the chat module or create your own handler.\n\nie: \nfriendStore.onFriendClicked(friend =>{\n\talert('do stuff'))\n}"
         );
-
-    //if chat enabled -> open chat
-    //else if profiles -> open profile
   };
 
   handleFriendRequestDecision = (notification, action) => {
