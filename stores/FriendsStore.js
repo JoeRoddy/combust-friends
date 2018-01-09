@@ -1,7 +1,6 @@
 import { observable, computed } from "mobx";
-import friendsService from "../service/FriendsService";
 
-//DEPENDENCIES
+import friendsService from "../service/FriendsService";
 import usersStore from "./UsersStore";
 import notificationStore from "./NotificationStore";
 
@@ -29,21 +28,17 @@ class FriendsStore {
 
     const userId = user.id;
     friendsService.listenToFriendships(userId, (err, friendshipId) => {
-      friendsService.listenToFriendship(
-        friendshipId,
-        userId,
-        (err, friendship) => {
-          const usersInFriendship = friendship.users
-            ? Object.keys(friendship.users)
-            : [];
-          const friendId = usersInFriendship.find(uid => uid !== userId);
-          this.friendshipsMapByFriendId.set(friendId, friendship);
-          if (friendship.status === "active") {
-            this.activeFriendshipsByFriendIdMap.set(friendId, true);
-            usersStore.listenToPublicUserData(friendId);
-          }
+      friendsService.listenToFriendship(friendshipId, (err, friendship) => {
+        const usersInFriendship = friendship.users
+          ? Object.keys(friendship.users)
+          : [];
+        const friendId = usersInFriendship.find(uid => uid !== userId);
+        this.friendshipsMapByFriendId.set(friendId, friendship);
+        if (friendship.status === "active") {
+          this.activeFriendshipsByFriendIdMap.set(friendId, true);
+          usersStore.listenToPublicUserData(friendId);
         }
-      );
+      });
     });
 
     this.usersLoaded = true;

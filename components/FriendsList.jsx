@@ -1,10 +1,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import friendsStore from "../../../stores/FriendsStore";
-//FRIENDS_DEPENDENCIES
+import friendsStore from "../../stores/FriendsStore";
 import UserList from "../users/UserList";
-import chatStore from "../../../stores/ChatStore";
+import chatStore from "../../stores/ChatStore";
 
 friendsStore.onFriendClicked(user => {
   chatStore.openConversationWithUser(user.id);

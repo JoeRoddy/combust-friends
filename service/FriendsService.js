@@ -41,10 +41,12 @@ class FriendsService {
 
   createFriendship(uid, friendId) {
     if (!uid || !friendId) {
-      throw "createFrienship() missing arg, userId:" +
-        uid +
-        " -- friendId: " +
-        friendId;
+      throw new Error(
+        "createFrienship() missing arg, userId:" +
+          uid +
+          " -- friendId: " +
+          friendId
+      );
     }
     let db = firebase.database();
     const friendship = {
@@ -68,7 +70,7 @@ class FriendsService {
 
   listenToFriends(userId, callback) {
     this.listenToFriendships(userId, (err, friendshipId) => {
-      this.listenToFriendship(friendshipId, userId, callback);
+      this.listenToFriendship(friendshipId, callback);
     });
   }
 
@@ -82,7 +84,7 @@ class FriendsService {
       });
   }
 
-  listenToFriendship(friendshipId, userId, callback) {
+  listenToFriendship(friendshipId, callback) {
     firebase
       .database()
       .ref("friends/friendships")
@@ -90,13 +92,11 @@ class FriendsService {
       .on("value", snap => {
         let friendship = snap.val();
         if (friendship) {
-          const usersInFriendship =
-            friendship.users && Object.keys(friendship.users);
-          const friendId = usersInFriendship.find(uid => uid !== userId);
-          friendship.id = friendshipId;
           return callback(null, friendship);
-          // this.listenToFriend(friendId, callback);
         }
+        return friendship
+          ? callback(null, friendship)
+          : callback("No friendship found w/id: " + friendshipId);
       });
   }
 
