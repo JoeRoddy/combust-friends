@@ -6,8 +6,6 @@ class FriendsService {
     const friendshipId = this.createFriendship(uid, friendId);
     notificationService.createNotification(
       {
-        userId: friendId,
-        createdBy: uid,
         type: "friend_request",
         friendshipId: friendshipId,
         body: requestBody,
@@ -16,7 +14,8 @@ class FriendsService {
           decline: true
         }
       },
-      friendId
+      friendId,
+      uid
     );
   }
 
