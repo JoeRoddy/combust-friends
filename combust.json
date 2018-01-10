@@ -22,5 +22,19 @@
         ]
       }
     }
+  },
+  "rules": {
+    ".read": true,
+    "friendshipIdsByUser": {
+      "$uid": {
+        ".write": "!data.exists()"
+      }
+    },
+    "friendships": {
+      "$fid": {
+        ".write":
+          "!data.exists() || data.child('users').child(auth.uid).exists()"
+      }
+    }
   }
 }
