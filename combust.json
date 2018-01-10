@@ -27,7 +27,9 @@
     ".read": true,
     "friendshipIdsByUser": {
       "$uid": {
-        ".write": "!data.exists()"
+        "$friendshipId": {
+          ".write": "!data.exists()"
+        }
       }
     },
     "friendships": {
