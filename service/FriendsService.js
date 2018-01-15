@@ -1,4 +1,5 @@
 import firebase from "firebase";
+
 import notificationService from "./NotificationService";
 
 class FriendsService {
