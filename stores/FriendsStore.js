@@ -3,13 +3,12 @@ import { observable, computed } from "mobx";
 import friendsService from "../service/FriendsService";
 import usersStore from "./UsersStore";
 import notificationStore from "./NotificationStore";
+import { database } from "firebase";
 
 class FriendsStore {
-  subscribeToEvents() {
-    //must be inline functions, or use .bind(this)
+  init() {
     usersStore.onLogin(this.getFriendsForUser.bind(this));
     usersStore.onLogout(this.onUserLogout.bind(this));
-
     notificationStore.onNotificationAction(
       "friend_request",
       this.handleFriendRequestDecision.bind(this)
@@ -36,7 +35,7 @@ class FriendsStore {
         this.friendshipsMapByFriendId.set(friendId, friendship);
         if (friendship.status === "active") {
           this.activeFriendshipsByFriendIdMap.set(friendId, true);
-          usersStore.listenToPublicUserData(friendId);
+          usersStore.getUserById(friendId); //apply listener
         }
       });
     });
@@ -59,7 +58,7 @@ class FriendsStore {
 
   /**
    * returns 'friend', 'pending', or 'non_friend'
-   * @param {*} friendId
+   * @param {string} friendId
    */
   friendshipStatus(friendId) {
     if (this.isFriend(friendId)) {
@@ -116,6 +115,7 @@ class FriendsStore {
 
   onUserLogout(user) {
     this.friendIdsMap.clear();
+    this.activeFriendshipsByFriendIdMap.clear();
     this.usersLoaded = false;
   }
 }
