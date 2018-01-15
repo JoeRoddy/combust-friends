@@ -1,5 +1,4 @@
 import { observable, computed } from "mobx";
-import { database } from "firebase";
 
 import friendsService from "../service/FriendsService";
 import usersStore from "./UsersStore";
