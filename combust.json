@@ -13,11 +13,11 @@
       }
     },
     "components/users/Profile.jsx": {
-      "imports": ["import friendsStore from \"../../stores/FriendsStore\";"],
+      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
       "replace": {
         "pattern": "alert(\"combust install friends\");\n",
         "code": [
-          "friendsStore.addFriend(userId);",
+          "friendStore.addFriend(userId);",
           "alert('Friend Request Sent');"
         ]
       }

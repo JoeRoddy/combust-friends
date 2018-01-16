@@ -2,7 +2,7 @@ import firebase from "firebase";
 
 import notificationService from "./NotificationService";
 
-class FriendsService {
+class FriendService {
   sendFriendRequest(friendId, uid, requestBody) {
     const friendshipId = this.createFriendship(uid, friendId);
     notificationService.createNotification(
@@ -115,6 +115,6 @@ class FriendsService {
   }
 }
 
-const friendsService = new FriendsService();
+const friendService = new FriendService();
 
-export default friendsService;
+export default friendService;

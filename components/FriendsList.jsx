@@ -1,11 +1,11 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import friendsStore from "../../stores/FriendsStore";
+import friendStore from "../../stores/FriendStore";
 import UserList from "../users/UserList";
 import chatStore from "../../stores/ChatStore";
 
-friendsStore.onFriendClicked(user => {
+friendStore.onFriendClicked(user => {
   chatStore.openConversationWithUser(user.id);
 });
 
@@ -13,8 +13,8 @@ const FriendsList = observer(() => {
   return (
     <UserList
       title="Friends"
-      users={friendsStore.friends}
-      onUserClicked={friendsStore.handleFriendClick}
+      users={friendStore.friends}
+      onUserClicked={friendStore.handleFriendClick}
     />
   );
 });

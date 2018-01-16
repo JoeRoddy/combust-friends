@@ -1,13 +1,13 @@
 import { observable, computed } from "mobx";
 
-import friendsService from "../service/FriendsService";
-import usersStore from "./UsersStore";
+import friendService from "../service/FriendService";
+import userStore from "./UserStore";
 import notificationStore from "./NotificationStore";
 
-class FriendsStore {
+class FriendStore {
   init() {
-    usersStore.onLogin(this.getFriendsForUser.bind(this));
-    usersStore.onLogout(this.onUserLogout.bind(this));
+    userStore.onLogin(this.getFriendsForUser.bind(this));
+    userStore.onLogout(this.onUserLogout.bind(this));
     notificationStore.onNotificationAction(
       "friend_request",
       this.handleFriendRequestDecision.bind(this)
@@ -25,8 +25,8 @@ class FriendsStore {
     }
 
     const userId = user.id;
-    friendsService.listenToFriendships(userId, (err, friendshipId) => {
-      friendsService.listenToFriendship(friendshipId, (err, friendship) => {
+    friendService.listenToFriendships(userId, (err, friendshipId) => {
+      friendService.listenToFriendship(friendshipId, (err, friendship) => {
         const usersInFriendship = friendship.users
           ? Object.keys(friendship.users)
           : [];
@@ -34,7 +34,7 @@ class FriendsStore {
         this.friendshipsMapByFriendId.set(friendId, friendship);
         if (friendship.status === "active") {
           this.activeFriendshipsByFriendIdMap.set(friendId, true);
-          usersStore.getUserById(friendId); //apply listener
+          userStore.getUserById(friendId); //apply listener
         }
       });
     });
@@ -43,7 +43,7 @@ class FriendsStore {
   }
 
   storeFriend(friendId, friend) {
-    usersStore.saveUserLocally(friendId, friend);
+    userStore.saveUserLocally(friendId, friend);
     this.friendIdsMap.set(friendId, true);
   }
 
@@ -52,7 +52,7 @@ class FriendsStore {
   }
 
   getFriend(userId) {
-    return this.isFriend(userId) ? usersStore.getUserById(userId) : null;
+    return this.isFriend(userId) ? userStore.getUserById(userId) : null;
   }
 
   /**
@@ -75,16 +75,16 @@ class FriendsStore {
     } else if (this.friendshipsMapByFriendId.has(friendId)) {
       return console.error("friend request already pending");
     }
-    const clientUser = usersStore.user;
+    const clientUser = userStore.user;
     const body = `${clientUser.email} would like to be your friend`;
-    friendsService.sendFriendRequest(friendId, usersStore.userId, body);
+    friendService.sendFriendRequest(friendId, userStore.userId, body);
   }
 
   @computed
   get friends() {
     let friends = {};
     Array.from(this.activeFriendshipsByFriendIdMap.keys()).forEach(uid => {
-      const friend = usersStore.getUserById(uid);
+      const friend = userStore.getUserById(uid);
       if (friend) {
         friends[uid] = friend;
       }
@@ -109,7 +109,7 @@ class FriendsStore {
 
   handleFriendRequestDecision = (notification, action) => {
     let isAccepted = action === "accept";
-    friendsService.answerFriendRequest(isAccepted, notification.friendshipId);
+    friendService.answerFriendRequest(isAccepted, notification.friendshipId);
   };
 
   onUserLogout(user) {
@@ -119,5 +119,5 @@ class FriendsStore {
   }
 }
 
-const friendsStore = new FriendsStore();
-export default friendsStore;
+const friendStore = new FriendStore();
+export default friendStore;
