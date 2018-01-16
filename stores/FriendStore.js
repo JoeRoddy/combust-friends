@@ -76,7 +76,7 @@ class FriendStore {
       return console.error("friend request already pending");
     }
     const clientUser = userStore.user;
-    const body = `${clientUser.email} would like to be your friend`;
+    const body = `${clientUser.displayName} would like to be your friend`;
     friendService.sendFriendRequest(friendId, userStore.userId, body);
   }
 
