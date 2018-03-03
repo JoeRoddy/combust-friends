@@ -1,6 +1,6 @@
 import { observable, computed } from "mobx";
 
-import friendService from "../service/FriendService";
+import friendDb from "../db/FriendDb";
 import userStore from "./UserStore";
 import notificationStore from "./NotificationStore";
 
@@ -25,8 +25,8 @@ class FriendStore {
     }
 
     const userId = user.id;
-    friendService.listenToFriendships(userId, (err, friendshipId) => {
-      friendService.listenToFriendship(friendshipId, (err, friendship) => {
+    friendDb.listenToFriendships(userId, (err, friendshipId) => {
+      friendDb.listenToFriendship(friendshipId, (err, friendship) => {
         const usersInFriendship = friendship.users
           ? Object.keys(friendship.users)
           : [];
@@ -77,7 +77,7 @@ class FriendStore {
     }
     const clientUser = userStore.user;
     const body = `${clientUser.displayName} would like to be your friend`;
-    friendService.sendFriendRequest(friendId, userStore.userId, body);
+    friendDb.sendFriendRequest(friendId, userStore.userId, body);
   }
 
   @computed
@@ -109,7 +109,7 @@ class FriendStore {
 
   handleFriendRequestDecision = (notification, action) => {
     let isAccepted = action === "accept";
-    friendService.answerFriendRequest(isAccepted, notification.friendshipId);
+    friendDb.answerFriendRequest(isAccepted, notification.friendshipId);
   };
 
   onUserLogout(user) {
