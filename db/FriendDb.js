@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-import notificationDb from "./notificationDb";
+import notificationDb from "./NotificationDb";
 
 class FriendDb {
   sendFriendRequest(friendId, uid, requestBody) {
