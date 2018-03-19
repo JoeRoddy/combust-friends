@@ -109,7 +109,11 @@ class FriendStore {
 
   handleFriendRequestDecision = (notification, action) => {
     let isAccepted = action === "accept";
-    friendDb.answerFriendRequest(isAccepted, notification.friendshipId);
+    friendDb.answerFriendRequest(
+      isAccepted,
+      notification.friendshipId,
+      notification.createdBy
+    );
   };
 
   onUserLogout(user) {

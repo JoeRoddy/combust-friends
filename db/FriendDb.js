@@ -1,30 +1,19 @@
 import firebase from "firebase";
 
 import notificationDb from "./NotificationDb";
+import userStore from "../stores/UserStore";
 
 class FriendDb {
   sendFriendRequest(friendId, uid, requestBody) {
     const friendshipId = this.createFriendship(uid, friendId);
-    notificationDb.createNotification(
-      {
-        type: "friend_request",
-        friendshipId: friendshipId,
-        body: requestBody,
-        actions: {
-          accept: true,
-          decline: true
-        }
-      },
-      friendId,
-      uid
-    );
+    _createFriendRequestNotif(friendshipId, friendId, uid, requestBody);
   }
 
   removeFriend(friendId, uid) {
     this.setFriendship(friendId, uid, false);
   }
 
-  answerFriendRequest(isAccepted, friendshipId) {
+  answerFriendRequest(isAccepted, friendshipId, friendId) {
     if (!friendshipId) {
       return;
     }
@@ -37,6 +26,10 @@ class FriendDb {
         status: isAccepted ? "active" : "declined",
         acceptedOn: isAccepted ? new Date().getTime() : null
       });
+
+    if (isAccepted) {
+      _createRequestAcceptedNotif(friendshipId, friendId);
+    }
   }
 
   createFriendship(uid, friendId) {
@@ -118,3 +111,39 @@ class FriendDb {
 const friendDb = new FriendDb();
 
 export default friendDb;
+
+const _createFriendRequestNotif = function(
+  friendshipId,
+  friendId,
+  uid,
+  requestBody
+) {
+  notificationDb.createNotification(
+    {
+      type: "friend_request",
+      friendshipId,
+      body: requestBody,
+      link: "/profile/" + uid,
+      actions: {
+        accept: true,
+        decline: true
+      }
+    },
+    friendId,
+    uid
+  );
+};
+
+const _createRequestAcceptedNotif = function(friendshipId, friendId) {
+  const { displayName, id } = userStore.user;
+  notificationDb.createNotification(
+    {
+      type: "friend_request_accepted",
+      friendshipId,
+      body: displayName + " accepted your friend request!",
+      link: "/profile/" + id
+    },
+    friendId,
+    id
+  );
+};
