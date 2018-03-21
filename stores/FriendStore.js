@@ -42,17 +42,8 @@ class FriendStore {
     this.usersLoaded = true;
   }
 
-  storeFriend(friendId, friend) {
-    userStore.saveUserLocally(friendId, friend);
-    this.friendIdsMap.set(friendId, true);
-  }
-
   isFriend(userId) {
     return this.activeFriendshipsByFriendIdMap.has(userId);
-  }
-
-  getFriend(userId) {
-    return this.isFriend(userId) ? userStore.getUserById(userId) : null;
   }
 
   /**
