@@ -41,12 +41,26 @@
           "alert('Friend Request Sent');"
         ]
       }
+    },
+    "components/reusable/SideMenu.js": {
+      "after": {
+        "pattern": "const COMBUST_MENU_ITEMS = [\n",
+        "code": [
+          "{title: \"Friends\",icon: \"person-add\",onPress: () => nav.navigate(\"FriendsList\", { userId: user.id })},"
+        ]
+      }
+    },
+    "components/Routes.js": {
+      "imports": [
+        "import FriendsList from \"./friends/FriendsList\";"
+      ],
+      "after": {
+        "pattern": "const COMBUST_SCREENS = {",
+        "code": [
+          "FriendsList: { screen: FriendsList, path: \"/FriendsList\" },"
+        ]
+      }
     }
-  },
-  "mobile_routing": {
-    "component": "FriendsList",
-    "title": "Friends",
-    "icon": "person-add"
   },
   "rules": {
     ".read": true,
