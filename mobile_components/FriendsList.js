@@ -9,7 +9,7 @@ import UserList from "../users/UserList";
 
 const FriendsList = observer(() => {
   const { friends } = friendStore;
-  const isFriendless = friends !== {};
+  const isFriendless = Object.keys(friends).length === 0;
 
   return (
     <Screen title="Friends" noPadding={!isFriendless}>
