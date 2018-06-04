@@ -44,7 +44,7 @@
     },
     "components/reusable/SideMenu.js": {
       "after": {
-        "pattern": "const COMBUST_MENU_ITEMS = [\n",
+        "pattern": "const COMBUST_MENU_ITEMS = [",
         "code": [
           "{title: \"Friends\",icon: \"person-add\",onPress: () => nav.navigate(\"FriendsList\", { userId: user.id })},"
         ]
