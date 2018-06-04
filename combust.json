@@ -6,14 +6,20 @@
   },
   "installation": {
     "components/users/SocialContacts.jsx": {
-      "imports": ["import FriendsList from \"../friends/FriendsList\";"],
+      "imports": [
+        "import FriendsList from \"../friends/FriendsList\";"
+      ],
       "after": {
         "pattern": "const componentsByMode = {",
-        "code": ["\nFriends: <FriendsList  />,"]
+        "code": [
+          "\nFriends: <FriendsList  />,"
+        ]
       }
     },
     "components/users/Profile.jsx": {
-      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
+      "imports": [
+        "import friendStore from \"../../stores/FriendStore\";"
+      ],
       "replace": {
         "pattern": "alert(\"combust install friends\");\n",
         "code": [
@@ -22,6 +28,25 @@
         ]
       }
     }
+  },
+  "installation_mobile": {
+    "components/users/Profile.js": {
+      "imports": [
+        "import friendStore from \"../../stores/FriendStore\";"
+      ],
+      "replace": {
+        "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
+        "code": [
+          "friendStore.addFriend(userId);",
+          "alert('Friend Request Sent');"
+        ]
+      }
+    }
+  },
+  "mobile_routing": {
+    "component": "FriendsList",
+    "title": "Friends",
+    "icon": "person-add"
   },
   "rules": {
     ".read": true,
@@ -34,8 +59,7 @@
     },
     "friendships": {
       "$fid": {
-        ".write":
-          "!data.exists() || data.child('users').child(auth.uid).exists()"
+        ".write": "!data.exists() || data.child('users').child(auth.uid).exists()"
       }
     }
   }
