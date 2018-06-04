@@ -1,6 +1,6 @@
 {
   "name": "combust-friends",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "friends module for combust",
   "main": "index.js",
   "scripts": {
