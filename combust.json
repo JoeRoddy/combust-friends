@@ -42,9 +42,9 @@
           ]
         },
         {
-          "pattern": "isFriend = false",
+          "pattern": "friendType = null",
           "code": [
-            "isFriend = friendStore.friendshipStatus(userId) === \"friend\""
+            "friendType = friendStore.friendshipStatus(userId)"
           ]
         }
       ]
