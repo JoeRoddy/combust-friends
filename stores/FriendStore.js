@@ -83,21 +83,6 @@ class FriendStore {
     return friends;
   }
 
-  onFriendClickedTriggers = [];
-  onFriendClicked = func => {
-    this.onFriendClickedTriggers.push(func);
-  };
-
-  handleFriendClick = friend => {
-    this.onFriendClickedTriggers.length > 0
-      ? this.onFriendClickedTriggers.forEach(event => {
-          event(friend);
-        })
-      : alert(
-          "Friend clicked, add the chat module or create your own handler.\n\nie: \nfriendStore.onFriendClicked(friend =>{\n\talert('do stuff'))\n}"
-        );
-  };
-
   handleFriendRequestDecision = (notification, action) => {
     let isAccepted = action === "accept";
     friendDb.answerFriendRequest(

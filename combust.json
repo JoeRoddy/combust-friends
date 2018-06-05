@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "users": "latest",
-    "chat": "latest",
     "notifications": "latest"
   },
   "installation": {
@@ -34,13 +33,21 @@
       "imports": [
         "import friendStore from \"../../stores/FriendStore\";"
       ],
-      "replace": {
-        "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
-        "code": [
-          "friendStore.addFriend(userId);",
-          "alert('Friend Request Sent');"
-        ]
-      }
+      "replace": [
+        {
+          "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
+          "code": [
+            "friendStore.addFriend(userId);",
+            "alert('Friend Request Sent');"
+          ]
+        },
+        {
+          "pattern": "isFriend = false",
+          "code": [
+            "isFriend = friendStore.friendshipStatus(userId) === \"friend\""
+          ]
+        }
+      ]
     },
     "components/reusable/SideMenu.js": {
       "after": {

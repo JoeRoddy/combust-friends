@@ -2,19 +2,15 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import friendStore from "../../stores/FriendStore";
+import userStore from "../../stores/UserStore";
 import UserList from "../users/UserList";
-import chatStore from "../../stores/ChatStore";
 
-friendStore.onFriendClicked(user => {
-  chatStore.openConversationWithUser(user.id);
-});
-
-const FriendsList = observer(() => {
+const FriendsList = observer(({ history }) => {
   return (
     <UserList
       title="Friends"
       users={friendStore.friends}
-      onUserClicked={friendStore.handleFriendClick}
+      onUserClicked={user => history.push("/profile/" + user.id)}
     />
   );
 });

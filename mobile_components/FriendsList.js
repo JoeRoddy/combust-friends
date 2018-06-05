@@ -18,7 +18,7 @@ const FriendsList = observer(() => {
       ) : (
         <UserList
           users={friendStore.friends}
-          onUserClicked={user => nav.navigate("Profile", { id: user.id })}
+          onUserPressed={user => nav.navigate("Profile", { id: user.id })}
         />
       )}
     </Screen>
