@@ -5,20 +5,14 @@
   },
   "installation": {
     "components/users/SocialContacts.jsx": {
-      "imports": [
-        "import FriendsList from \"../friends/FriendsList\";"
-      ],
+      "imports": ["import FriendsList from \"../friends/FriendsList\";"],
       "after": {
         "pattern": "const componentsByMode = {",
-        "code": [
-          "\nFriends: <FriendsList  />,"
-        ]
+        "code": ["\nFriends: history => <FriendsList history={history} />,"]
       }
     },
     "components/users/Profile.jsx": {
-      "imports": [
-        "import friendStore from \"../../stores/FriendStore\";"
-      ],
+      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
       "replace": {
         "pattern": "alert(\"combust install friends\");\n",
         "code": [
@@ -30,12 +24,11 @@
   },
   "installation_mobile": {
     "components/users/Profile.js": {
-      "imports": [
-        "import friendStore from \"../../stores/FriendStore\";"
-      ],
+      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
       "replace": [
         {
-          "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
+          "pattern":
+            "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
           "code": [
             "friendStore.addFriend(userId);",
             "alert('Friend Request Sent');"
@@ -43,9 +36,7 @@
         },
         {
           "pattern": "friendType = null",
-          "code": [
-            "friendType = friendStore.friendshipStatus(userId)"
-          ]
+          "code": ["friendType = friendStore.friendshipStatus(userId)"]
         }
       ]
     },
@@ -58,9 +49,7 @@
       }
     },
     "components/Routes.js": {
-      "imports": [
-        "import FriendsList from \"./friends/FriendsList\";"
-      ],
+      "imports": ["import FriendsList from \"./friends/FriendsList\";"],
       "after": {
         "pattern": "const COMBUST_SCREENS = {",
         "code": [
@@ -80,7 +69,8 @@
     },
     "friendships": {
       "$fid": {
-        ".write": "!data.exists() || data.child('users').child(auth.uid).exists()"
+        ".write":
+          "!data.exists() || data.child('users').child(auth.uid).exists()"
       }
     }
   }
