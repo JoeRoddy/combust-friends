@@ -4,14 +4,14 @@
     "notifications": "latest"
   },
   "installation": {
-    "components/users/SocialContacts.jsx": {
+    "src/components/users/SocialContacts.jsx": {
       "imports": ["import FriendsList from \"../friends/FriendsList\";"],
       "after": {
         "pattern": "const componentsByMode = {",
         "code": ["\nFriends: history => <FriendsList history={history} />,"]
       }
     },
-    "components/users/Profile.jsx": {
+    "src/components/users/Profile.jsx": {
       "imports": ["import friendStore from \"../../stores/FriendStore\";"],
       "replace": {
         "pattern": "alert(\"combust install friends\");\n",
@@ -23,12 +23,11 @@
     }
   },
   "installation_mobile": {
-    "components/users/Profile.js": {
+    "src/components/users/Profile.js": {
       "imports": ["import friendStore from \"../../stores/FriendStore\";"],
       "replace": [
         {
-          "pattern":
-            "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
+          "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
           "code": [
             "friendStore.addFriend(userId);",
             "alert('Friend Request Sent');"
@@ -40,7 +39,7 @@
         }
       ]
     },
-    "components/reusable/SideMenu.js": {
+    "src/components/reusable/SideMenu.js": {
       "after": {
         "pattern": "const COMBUST_MENU_ITEMS = [",
         "code": [
@@ -48,7 +47,7 @@
         ]
       }
     },
-    "components/Routes.js": {
+    "src/components/Routes.js": {
       "imports": ["import FriendsList from \"./friends/FriendsList\";"],
       "after": {
         "pattern": "const COMBUST_SCREENS = {",
@@ -69,8 +68,7 @@
     },
     "friendships": {
       "$fid": {
-        ".write":
-          "!data.exists() || data.child('users').child(auth.uid).exists()"
+        ".write": "!data.exists() || data.child('users').child(auth.uid).exists()"
       }
     }
   }
