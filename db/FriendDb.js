@@ -93,20 +93,6 @@ class FriendDb {
           : callback("No friendship found w/id: " + friendshipId);
       });
   }
-
-  listenToFriend(friendId, callback) {
-    firebase
-      .database()
-      .ref("users/publicInfo/" + friendId)
-      .on("value", snapshot => {
-        let friend = snapshot.val();
-        if (!friend) {
-          return callback("no friend data w/ uid:" + friendId);
-        }
-        friend.id = friendId;
-        callback(null, friend);
-      });
-  }
 }
 
 const friendDb = new FriendDb();
