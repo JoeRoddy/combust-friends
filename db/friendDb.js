@@ -1,8 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import notificationDb from "./NotificationDb";
-import userStore from "../stores/UserStore";
+import notificationDb from "./notificationDb";
+import userStore from "../stores/userStore";
 
 class FriendDb {
   sendFriendRequest(friendId, uid, requestBody) {

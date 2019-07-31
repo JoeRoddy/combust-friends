@@ -1,8 +1,8 @@
 import { observable, computed } from "mobx";
 
 import friendDb from "../db/friendDb";
-import userStore from "./UserStore";
-import notificationStore from "./NotificationStore";
+import userStore from "./userStore";
+import notificationStore from "./notificationStore";
 
 class FriendStore {
   init() {
