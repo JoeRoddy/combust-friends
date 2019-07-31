@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import friendStore from "../../stores/FriendStore";
+import friendStore from "../../stores/friendStore";
 import UserList from "../users/UserList";
 
 const FriendsList = observer(({ history }) => {

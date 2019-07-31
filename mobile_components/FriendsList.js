@@ -2,8 +2,8 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Text } from "react-native";
 
-import nav from "../../helpers/NavigatorHelper";
-import friendStore from "../../stores/FriendStore";
+import nav from "../../helpers/navigatorHelper";
+import friendStore from "../../stores/friendStore";
 import { Button, Screen } from "../reusable";
 import UserList from "../users/UserList";
 

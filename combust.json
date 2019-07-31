@@ -12,7 +12,7 @@
       }
     },
     "src/components/users/Profile.jsx": {
-      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
+      "imports": ["import friendStore from \"../../stores/friendStore\";"],
       "replace": {
         "pattern": "alert(\"combust install friends\");\n",
         "code": [
@@ -24,7 +24,7 @@
   },
   "installation_mobile": {
     "src/components/users/Profile.js": {
-      "imports": ["import friendStore from \"../../stores/FriendStore\";"],
+      "imports": ["import friendStore from \"../../stores/friendStore\";"],
       "replace": [
         {
           "pattern": "alert(\"Execute from your terminal:\", \"combust install friends\");\n",
@@ -47,7 +47,7 @@
         ]
       }
     },
-    "src/components/Routes.js": {
+    "src/components/app/Routes.js": {
       "imports": ["import FriendsList from \"./friends/FriendsList\";"],
       "after": {
         "pattern": "const COMBUST_SCREENS = {",
